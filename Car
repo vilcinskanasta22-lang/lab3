@@ -1,0 +1,90 @@
+#include <iostream>
+#include <string>
+#include <iomanip>
+
+using namespace std;
+
+class CarRentalOrder {
+private:
+    string clientPassport; 
+    string carModel;       
+    int rentalDays;        
+    double totalCost;     
+    string orderStatus;    
+    bool isDamaged;        
+
+public:
+  
+    CarRentalOrder() {
+        clientPassport = "Unknown";
+        carModel = "None";
+        rentalDays = 0;
+        totalCost = 0.0;
+        orderStatus = "Pending";
+        isDamaged = false;
+    }
+
+    CarRentalOrder(string passport, string model, int days, double cost, string status, bool damaged) {
+        clientPassport = passport;
+        carModel = model;
+        rentalDays = days;
+        totalCost = cost;
+        orderStatus = status;
+        isDamaged = damaged;
+    }
+
+    ~CarRentalOrder() {
+       
+    }
+
+    void RW() {
+        cout << "Enter client passport details: ";
+        cin >> clientPassport;
+        cout << "Enter car model: ";
+        cin >> carModel;
+        cout << "Enter rental days: ";
+        cin >> rentalDays;
+        cout << "Enter total cost: ";
+        cin >> totalCost;
+        cout << "Enter order status (Pending/Confirmed/Rejected): ";
+        cin >> orderStatus;
+        cout << "Is car damaged? (1 - Yes, 0 - No): ";
+        cin >> isDamaged;
+    }
+
+    void RD() const {
+        cout << "\n--- Car Rental Order Details ---" << endl;
+        cout << "Client Passport: " << clientPassport << endl;
+        cout << "Car Model:       " << carModel << endl;
+        cout << "Rental Days:     " << rentalDays << endl;
+        cout << "Total Cost:      $" << fixed << setprecision(2) << totalCost << endl;
+        cout << "Order Status:    " << orderStatus << endl;
+        cout << "Car Damaged:     " << (isDamaged ? "Yes" : "No") << endl;
+        cout << "--------------------------------\n" << endl;
+    }
+
+    friend void adminProcessOrder(CarRentalOrder& order, string newStatus, bool damageReport);
+};
+
+void adminProcessOrder(CarRentalOrder& order, string newStatus, bool damageReport) {
+    order.orderStatus = newStatus;
+    order.isDamaged = damageReport;
+    if (newStatus == "Rejected") {
+        order.totalCost = 0.0;
+    }
+}
+
+int main() {
+   
+    CarRentalOrder myOrder;
+
+    cout << "=== Entering initial order data ===" << endl;
+    myOrder.RW(); 
+    cout << "\n=== Displaying order data ===" << endl;
+    myOrder.RD(); 
+    cout << "=== Administrator processes the order (Confirmation & Damage Check) ===" << endl;
+    adminProcessOrder(myOrder, "Confirmed", true);
+    myOrder.RD();
+
+    return 0;
+}
